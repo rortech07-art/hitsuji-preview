@@ -75,7 +75,7 @@
   function statusOf(d) {
     var v = CAL[ymd(d)];
     if (v) return v;
-    return d.getDay() === 2 ? 'off' : 'o'; /* 既定：火曜定休 */
+    return d.getDay() === 0 ? 'off' : 'o'; /* 既定：日曜定休 */
   }
 
   var grid = document.getElementById('calGrid');

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=33">
+<link rel="stylesheet" href="assets/css/style.css?v=35">
 <style>
 /* ==========================================================
    運用デモ（管理画面・成果レポート）
@@ -405,7 +405,7 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
   let h=DOW.map(n=>`<div class="dow">${n}</div>`).join('');
   for(let i=0;i<14;i++){
     const d=new Date(start); d.setDate(start.getDate()+i);
-    const st = d.getDay()===2 ? 'off' : (i%5===3 ? 'x' : i%3===1 ? 't' : 'o');
+    const st = d.getDay()===0 ? 'off' : (i%5===3 ? 'x' : i%3===1 ? 't' : 'o');
     h+=`<button type="button" class="ed-cell${st==='off'?' off':''}" data-st="${st}" aria-label="${d.getMonth()+1}月${d.getDate()}日">
       <span class="d">${d.getDate()}</span><span class="s ${M[st].c}${st==='off'?' txt':''}">${M[st].s}</span></button>`;
   }
