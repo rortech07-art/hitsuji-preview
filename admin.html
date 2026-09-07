@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>運用のしくみ｜ぬくもりサロン ひつじのうたた寝（デモ）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=33">
+<style>
+/* ==========================================================
+   運用デモ（管理画面・成果レポート）
+   サイト本体のトークンをそのまま使う。数値はすべてデモ用の仮値。
+   ========================================================== */
+body{background:var(--cream-hi);}
+.a-hd{position:sticky; top:0; z-index:30; background:rgba(250,243,233,.97); border-bottom:1px solid var(--line);}
+.a-hd .shell{display:flex; align-items:center; gap:16px; min-height:62px;}
+.a-hd b{font-family:var(--serif); font-size:16px; font-weight:500; letter-spacing:.1em;}
+.a-hd .tag{font-size:10.5px; letter-spacing:.16em; border:1px solid var(--copper-deep); color:var(--copper-deep); padding:2px 9px; border-radius:2px;}
+.a-hd a{margin-left:auto; font-size:12.5px; color:var(--copper-deep); text-decoration:none; border-bottom:1px solid var(--line);}
+
+.a-hero{padding:56px 0 8px;}
+.a-hero h1{font-size:clamp(24px,3.2vw,32px);}
+.a-hero p{margin-top:16px; color:var(--ink-mute); font-size:14px; line-height:2.1; max-width:720px;}
+
+/* ご要望への回答 */
+.req{width:100%; border-collapse:collapse; margin-top:34px;}
+.req th,.req td{text-align:left; padding:16px 14px; border-bottom:1px solid var(--line); font-size:13.5px; line-height:1.95; vertical-align:top;}
+.req thead th{font-size:11px; letter-spacing:.16em; color:var(--ink-mute); border-bottom:1px solid var(--line); padding-bottom:10px;}
+.req td:first-child{font-family:var(--serif); font-size:15px; width:230px; color:var(--ink-strong);}
+.req td:last-child{width:120px; white-space:nowrap;}
+.pill{display:inline-block; font-size:11px; letter-spacing:.1em; padding:4px 11px; border-radius:2px; background:#E9EFE4; color:#41603A;}
+
+/* タブ */
+.tabs{display:flex; gap:6px; margin:52px 0 0; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.tabs button{
+  background:none; border:0; border-bottom:2px solid transparent; cursor:pointer;
+  font-family:var(--serif); font-size:15px; letter-spacing:.08em; color:var(--ink-mute);
+  padding:14px 18px; min-height:48px;
+}
+.tabs button[aria-selected="true"]{color:var(--copper-deep); border-bottom-color:var(--copper-deep);}
+.panel{padding:44px 0 20px;}
+.panel[hidden]{display:none;}
+.panel h2{font-size:22px;}
+.panel .sub{margin-top:12px; color:var(--ink-mute); font-size:13.5px; line-height:2.05; max-width:640px;}
+
+.split{display:grid; grid-template-columns:390px 1fr; gap:52px; align-items:start; margin-top:36px;}
+
+/* スマホ枠 */
+.phone{
+  border:10px solid #2E2019; border-radius:34px; background:var(--cream-hi);
+  box-shadow:0 20px 50px rgba(50,32,20,.2); overflow:hidden;
+}
+.phone-bar{background:#2E2019; color:#D9C6AE; font-size:10.5px; letter-spacing:.14em; text-align:center; padding:5px 0 8px;}
+.phone-body{padding:18px 16px 22px;}
+.wp-hd{display:flex; align-items:center; gap:9px; padding-bottom:14px; border-bottom:1px solid var(--line);}
+.wp-hd span{font-size:12px; letter-spacing:.08em; color:var(--ink-mute);}
+.wp-hd .dot{width:9px; height:9px; border-radius:50%; background:var(--copper-deep);}
+
+.howto{counter-reset:h;}
+.howto li{display:grid; grid-template-columns:30px 1fr; gap:14px; padding:15px 0; border-bottom:1px solid var(--line); font-size:13.5px; line-height:2;}
+.howto li::before{
+  counter-increment:h; content:counter(h); width:26px; height:26px; border-radius:50%;
+  border:1px solid var(--copper-deep); color:var(--copper-deep); display:grid; place-items:center;
+  font-size:12px; font-family:var(--serif); margin-top:4px;
+}
+.howto b{display:block; font-family:var(--serif); font-size:15px; font-weight:500; color:var(--ink-strong);}
+
+/* 空き状況エディタ */
+.ed-hd{display:flex; align-items:center; justify-content:space-between; margin:16px 0 12px;}
+.ed-hd b{font-family:var(--serif); font-size:15px; font-weight:500;}
+.ed-hd em{font-style:normal; font-size:11px; color:var(--ink-mute);}
+.ed-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px;}
+.ed-grid .dow{text-align:center; font-size:10px; color:var(--ink-mute); padding-bottom:4px;}
+.ed-cell .mk-o{color:#4F7A43;} .ed-cell .mk-t{color:#8A5F16;} .ed-cell .mk-x{color:#9C4F3F;}
+.ed-cell{border:1px solid var(--line); background:#fff; border-radius:2px; padding:7px 2px 8px; text-align:center; cursor:pointer; min-height:52px;}
+.ed-cell .d{display:block; font-family:var(--serif); font-size:13px;}
+.ed-cell .s{display:block; font-size:16px; font-weight:600; line-height:1.4;}
+.ed-cell .s.txt{font-size:10px; font-weight:400;}
+.ed-cell.off{background:#EFE7DC; color:#74604F;}
+.ed-cell:active{background:#FFF4E9;}
+.ed-tip{margin-top:14px; padding:12px 14px; background:#FFF6EC; border:1px solid var(--line); font-size:12px; line-height:1.9; color:var(--ink-mute);}
+.ed-save{margin-top:14px; width:100%;}
+
+/* 投稿エディタ */
+.wp-field{margin-top:14px;}
+.wp-field label{display:block; font-size:11px; letter-spacing:.12em; color:var(--ink-mute); margin-bottom:6px;}
+.wp-field input,.wp-field textarea,.wp-field select{
+  width:100%; border:1px solid var(--line); background:#fff; padding:11px 12px; border-radius:2px;
+  font-family:var(--sans); font-size:13.5px; color:var(--ink); line-height:1.9;
+}
+.wp-field textarea{min-height:120px; resize:vertical;}
+.seo{margin-top:16px; border:1px solid var(--line); background:#FFF9F1; padding:14px;}
+.seo h4{font-size:12.5px; letter-spacing:.1em; font-family:var(--sans); font-weight:500; color:var(--ink-mute);}
+.seo ul{margin-top:10px; display:grid; gap:8px;}
+.seo li{display:flex; gap:9px; font-size:12px; line-height:1.8;}
+.seo .ok{color:#41603A;} .seo .todo{color:var(--copper-deep);}
+
+/* ==========================================================
+   成果レポート
+   ========================================================== */
+.tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:32px;}
+.tile{background:#fff; border:1px solid var(--line); padding:22px 20px;}
+.tile dt{font-size:11px; letter-spacing:.12em; color:var(--ink-mute);}
+.tile dd{margin:10px 0 0; font-family:var(--serif); font-size:32px; line-height:1.1; color:var(--ink-strong); letter-spacing:.02em;}
+.tile dd small{font-size:13px; font-family:var(--sans); color:var(--ink-mute); margin-left:4px;}
+.tile .delta{margin-top:9px; font-size:11.5px; letter-spacing:.06em; display:flex; align-items:center; gap:5px;}
+.up{color:#41603A;} .down{color:#9C4F3F;} .flat{color:var(--ink-mute);}
+
+.charts{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:26px;}
+.card{background:#fff; border:1px solid var(--line); padding:24px 24px 20px;}
+.card h3{font-size:15px; font-family:var(--sans); font-weight:500; letter-spacing:.08em; color:var(--ink-strong);}
+.card .cap{margin-top:6px; font-size:11.5px; color:var(--ink-mute); line-height:1.8;}
+
+/* 縦棒：ベースラインに接地、データ端だけ 4px 丸め、隣の棒とは 2px あける */
+.bars{display:flex; align-items:flex-end; gap:2px; height:150px; margin-top:22px; position:relative;}
+.bars::before,.bars::after{content:""; position:absolute; left:0; right:0; border-top:1px solid var(--line);}
+.bars::before{top:0;} .bars::after{bottom:0;}
+.bar{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; position:relative;}
+.bar i{display:block; width:60%; max-width:34px; background:var(--copper); border-radius:4px 4px 0 0;}
+.bar.mute i{background:#D9C0AB;}
+.bar b{position:absolute; top:-19px; font-size:11.5px; font-family:var(--sans); font-weight:500; color:var(--ink-strong); white-space:nowrap;}
+.bar-x{display:flex; gap:2px; margin-top:9px;}
+.bar-x span{flex:1; text-align:center; font-size:10.5px; color:var(--ink-mute);}
+.bar:focus-visible,.bar:hover{outline:none;}
+.bar:hover i{background:var(--copper-deep);}
+.bar .tip{
+  position:absolute; bottom:calc(100% + 24px); left:50%; transform:translateX(-50%);
+  background:var(--espresso); color:#F5E9DA; font-size:11.5px; letter-spacing:.04em;
+  padding:7px 11px; border-radius:2px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s;
+}
+.bar:hover .tip,.bar:focus-visible .tip{opacity:1;}
+
+/* 横棒：流入元 */
+.hbars{margin-top:20px; display:grid; gap:11px;}
+.hbar{display:grid; grid-template-columns:150px 1fr 62px; align-items:center; gap:12px; font-size:12.5px;}
+.hbar .lab{display:block; color:var(--ink); letter-spacing:.04em;}
+.hbar .track{display:block; height:16px; background:#F3EADF; border-radius:2px; overflow:hidden;}
+.hbar .fill{display:block; height:100%; background:var(--copper); border-radius:0 4px 4px 0;}
+.hbar .val{display:block; text-align:right; color:var(--ink-mute); font-variant-numeric:tabular-nums;}
+
+.tblwrap{margin-top:14px;}
+.tblwrap summary{cursor:pointer; font-size:11.5px; color:var(--copper-deep); letter-spacing:.1em; padding:8px 0;}
+.dtbl{width:100%; border-collapse:collapse; margin-top:8px;}
+.dtbl th,.dtbl td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); font-size:12px;}
+.dtbl th{color:var(--ink-mute); font-weight:400;}
+.dtbl td:last-child,.dtbl th:last-child{text-align:right; font-variant-numeric:tabular-nums;}
+
+.next{margin-top:26px; background:#FFF6EC; border:1px solid var(--line); padding:26px 26px 22px;}
+.next h3{font-size:16px;}
+.next ol{margin-top:14px; display:grid; gap:12px; counter-reset:n;}
+.next li{display:grid; grid-template-columns:26px 1fr; gap:12px; font-size:13.5px; line-height:2;}
+.next li::before{counter-increment:n; content:counter(n); width:22px; height:22px; border-radius:50%; background:var(--copper); color:#FFF8F1; display:grid; place-items:center; font-size:11px; margin-top:6px;}
+
+.foot-note{margin:44px 0 60px; font-size:11.5px; color:var(--ink-mute); line-height:2;}
+
+@media (max-width:1000px){
+  .split{grid-template-columns:1fr; gap:34px;}
+  .phone{max-width:390px; margin:0 auto;}
+  .tiles{grid-template-columns:repeat(2,1fr);}
+  .charts{grid-template-columns:1fr;}
+  .req td:first-child{width:auto;}
+}
+@media (max-width:640px){
+  .req thead{display:none;}
+  .req tr{display:block; border-bottom:1px solid var(--line); padding:14px 0;}
+  .req td{display:block; border:0; padding:3px 0; width:auto!important;}
+  .req td:first-child{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<header class="a-hd">
+  <div class="shell">
+    <b>運用のしくみ</b><span class="tag">デモ</span>
+    <a href="index.html">サイトを見る →</a>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="a-hero">
+    <h1>公開したあとに、どう回すか。</h1>
+    <p>
+      いただいたご要望は、どれも「公開して終わりにしない」ための仕組みです。
+      ここでは、実際にどんな画面で、どんな手順になるのかをお見せします。
+      数字はすべてデモ用の仮のものです。
+    </p>
+
+    <table class="req">
+      <thead><tr><th>ご要望</th><th>どう実現するか</th><th>状態</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>予約の空き状況がわかる</td>
+          <td>トップページに2週間分のカレンダーを常時表示。日付を選ぶとLINEの予約メッセージが用意されるので、お客様は「空いている日を選ぶ→送る」の2手で予約できます。</td>
+          <td><span class="pill">実装済み</span></td>
+        </tr>
+        <tr>
+          <td>先方がAndroidで編集できる</td>
+          <td>空き状況・お知らせ・料金・お客様の声は、スマホの管理画面からタップで変更できます。パソコンは不要です。</td>
+          <td><span class="pill">実装済み</span></td>
+        </tr>
+        <tr>
+          <td>ブログを更新してSEOを上げる</td>
+          <td>スマホから記事を投稿。入力欄のとなりに「この記事で検索に出やすくするための確認項目」を出すので、SEOの知識がなくても形が整います。</td>
+          <td><span class="pill">実装済み</span></td>
+        </tr>
+        <tr>
+          <td>HPの成果報告ができる</td>
+          <td>毎月、見た人の数・予約ボタンを押した数・どこから来たかを1枚にまとめてお届けします。次に何をするかまで書きます。</td>
+          <td><span class="pill">実装済み</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" aria-controls="p1" id="t1">空き状況を変える</button>
+      <button role="tab" aria-selected="false" aria-controls="p2" id="t2">ブログを書く</button>
+      <button role="tab" aria-selected="false" aria-controls="p3" id="t3">成果レポート</button>
+    </div>
+  </section>
+
+  <!-- ============ 1 空き状況 ============ -->
+  <section class="panel" id="p1" role="tabpanel" aria-labelledby="t1">
+    <h2>スマホで、空き状況を変える</h2>
+    <p class="sub">日付を押すたびに、○（空きあり）→ △（残りわずか）→ ×（満席）→ 休（定休）と切り替わります。実際に押して試してみてください。押した内容は、そのままトップページのカレンダーに反映されます。</p>
+    <div class="split">
+      <div class="phone">
+        <div class="phone-bar">ぬくもりサロン 管理画面</div>
+        <div class="phone-body">
+          <div class="wp-hd"><span class="dot"></span><span>空き状況の編集</span></div>
+          <div class="ed-hd"><b>2週間分</b><em>押して切り替え</em></div>
+          <div class="ed-grid" id="edGrid"></div>
+          <p class="ed-tip">押すたびに ○ → △ → × → 休 と変わります。<br>お客様の画面は、保存した瞬間に切り替わります。</p>
+          <button class="btn btn-primary ed-save" type="button" id="edSave">保存する</button>
+        </div>
+      </div>
+      <div>
+        <ol class="howto">
+          <li><span><b>ホーム画面のアイコンを押す</b>アプリのように、1タップで管理画面が開きます。ログインは最初の1回だけです。</span></li>
+          <li><span><b>「空き状況の編集」を開く</b>最初の画面にいちばん大きく置きます。よく使うものを探させません。</span></li>
+          <li><span><b>日付を押して切り替える</b>文字を打つ場面はありません。押すだけです。</span></li>
+          <li><span><b>「保存する」を押す</b>お客様のページに即座に反映されます。反映待ちはありません。</span></li>
+        </ol>
+        <p class="sub" style="margin-top:26px">
+          予約管理システムは入れません。個人サロンで1日数件なら、外部システムの月額（3,000〜10,000円）に見合いません。
+          「空いているかどうか」だけをお客様に見せて、確定はLINEでやりとりする形が、いちばん手数が少なく費用もかかりません。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 ブログ ============ -->
+  <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2" hidden>
+    <h2>スマホで、ブログを書く</h2>
+    <p class="sub">書くのはいつもの文章で構いません。右の「検索に出やすくするための確認」が自動で埋まっていくので、SEOを勉強しなくても形が整います。</p>
+    <div class="split">
+      <div class="phone">
+        <div class="phone-bar">ぬくもりサロン 管理画面</div>
+        <div class="phone-body">
+          <div class="wp-hd"><span class="dot"></span><span>新しい記事を書く</span></div>
+          <div class="wp-field">
+            <label for="ttl">タイトル</label>
+            <input id="ttl" type="text" value="夏でも足先が冷たい方へ。大分の夏の冷え対策">
+          </div>
+          <div class="wp-field">
+            <label for="cat">カテゴリー</label>
+            <select id="cat"><option>冷え・温活</option><option>びわのこと</option><option>眠りのこと</option><option>お知らせ</option></select>
+          </div>
+          <div class="wp-field">
+            <label for="bd">本文</label>
+            <textarea id="bd">冷房の効いた部屋で一日過ごすと、夏でも足先だけが冷たいままという方が多くいらっしゃいます。大分は湿度が高いぶん、汗で身体が冷えやすい土地でもあります。
+
+サロンでは、まずびわの温熱で深部を温めてから…</textarea>
+          </div>
+          <div class="seo">
+            <h4>検索に出やすくするための確認</h4>
+            <ul>
+              <li><span class="ok">済</span><span>地域名（大分）がタイトルに入っています</span></li>
+              <li><span class="ok">済</span><span>悩みの言葉（冷え）がタイトルに入っています</span></li>
+              <li><span class="ok">済</span><span>カテゴリーが選ばれています</span></li>
+              <li><span class="todo">あと1つ</span><span>写真を1枚入れると、もっと読まれます</span></li>
+            </ul>
+          </div>
+          <button class="btn btn-primary ed-save" type="button">公開する</button>
+        </div>
+      </div>
+      <div>
+        <ol class="howto">
+          <li><span><b>タイトルに「地域」と「悩み」を入れる</b>「大分」「冷え」「眠りが浅い」。この2語が入るだけで、検索から見つかる確率が大きく変わります。</span></li>
+          <li><span><b>いつもの言葉で書く</b>専門用語に直す必要はありません。お客様に話しているとおりに書くほうが読まれます。</span></li>
+          <li><span><b>写真を1枚入れる</b>施術の様子でも、びわの葉でも構いません。スマホで撮ってそのまま貼れます。</span></li>
+          <li><span><b>公開する</b>Googleに自動で知らせが飛びます。手続きは不要です。</span></li>
+        </ol>
+        <p class="sub" style="margin-top:26px">
+          狙うのは「大分市 温活」「大分 びわ温活」「大分市 ドライヘッドスパ 女性」。
+          いきなり上位は取れませんが、<b>「大分 ＋ 悩みの言葉」の記事を月2本</b>積むと、半年で地域の検索に出はじめます。
+          何を書くかのネタ出しは、毎月のレポートと一緒にお渡しします。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 成果レポート ============ -->
+  <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3" hidden>
+    <h2>毎月の成果レポート</h2>
+    <p class="sub">「作って終わり」にしないための1枚です。見た人の数だけでなく、<b>予約ボタンが実際に何回押されたか</b>まで数えます。以下はデモ用の仮の数字です。</p>
+
+    <dl class="tiles">
+      <div class="tile"><dt>サイトを見た人</dt><dd>412<small>人</small></dd><p class="delta up">▲ 前月比 +18%</p></div>
+      <div class="tile"><dt>予約ボタンのタップ</dt><dd>37<small>回</small></dd><p class="delta up">▲ 前月比 +32%</p></div>
+      <div class="tile"><dt>予約に進んだ割合</dt><dd>9.0<small>%</small></dd><p class="delta up">▲ 前月 7.9%</p></div>
+      <div class="tile"><dt>「大分市 温活」順位</dt><dd>12<small>位</small></dd><p class="delta up">▲ 前月 19位</p></div>
+    </dl>
+
+    <div class="charts">
+      <div class="card">
+        <h3>サイトを見た人（過去6ヶ月）</h3>
+        <p class="cap">公開は4月。記事を出しはじめた6月から伸びています。</p>
+        <div class="bars" id="barsView" role="img" aria-label="過去6ヶ月の閲覧者数。4月186人、5月204人、6月248人、7月301人、8月349人、9月412人。"></div>
+        <div class="bar-x" id="barsViewX"></div>
+        <details class="tblwrap"><summary>数字で見る</summary>
+          <table class="dtbl"><thead><tr><th>月</th><th>見た人</th></tr></thead>
+            <tbody><tr><td>4月</td><td>186</td></tr><tr><td>5月</td><td>204</td></tr><tr><td>6月</td><td>248</td></tr><tr><td>7月</td><td>301</td></tr><tr><td>8月</td><td>349</td></tr><tr><td>9月</td><td>412</td></tr></tbody></table>
+        </details>
+      </div>
+
+      <div class="card">
+        <h3>予約ボタンのタップ（過去6ヶ月）</h3>
+        <p class="cap">空き状況カレンダーを置いた8月から、はっきり増えています。</p>
+        <div class="bars" id="barsTap" role="img" aria-label="過去6ヶ月の予約ボタンのタップ数。4月9回、5月11回、6月16回、7月21回、8月28回、9月37回。"></div>
+        <div class="bar-x" id="barsTapX"></div>
+        <details class="tblwrap"><summary>数字で見る</summary>
+          <table class="dtbl"><thead><tr><th>月</th><th>タップ</th></tr></thead>
+            <tbody><tr><td>4月</td><td>9</td></tr><tr><td>5月</td><td>11</td></tr><tr><td>6月</td><td>16</td></tr><tr><td>7月</td><td>21</td></tr><tr><td>8月</td><td>28</td></tr><tr><td>9月</td><td>37</td></tr></tbody></table>
+        </details>
+      </div>
+
+      <div class="card">
+        <h3>どこから来たか（今月）</h3>
+        <p class="cap">Googleマップからの流入がいちばん多く、次がInstagramです。</p>
+        <div class="hbars">
+          <div class="hbar"><span class="lab">Googleマップ</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">168人</span></div>
+          <div class="hbar"><span class="lab">Google検索</span><span class="track"><span class="fill" style="width:71%"></span></span><span class="val">119人</span></div>
+          <div class="hbar"><span class="lab">Instagram</span><span class="track"><span class="fill" style="width:52%"></span></span><span class="val">87人</span></div>
+          <div class="hbar"><span class="lab">直接・その他</span><span class="track"><span class="fill" style="width:23%"></span></span><span class="val">38人</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>よく読まれたページ（今月）</h3>
+        <p class="cap">「初めての方へ」が上位に来るのは、新しいお客様が増えている合図です。</p>
+        <div class="hbars">
+          <div class="hbar"><span class="lab">トップページ</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">412回</span></div>
+          <div class="hbar"><span class="lab">メニュー・料金</span><span class="track"><span class="fill" style="width:47%"></span></span><span class="val">194回</span></div>
+          <div class="hbar"><span class="lab">空き状況</span><span class="track"><span class="fill" style="width:41%"></span></span><span class="val">168回</span></div>
+          <div class="hbar"><span class="lab">夏の冷え対策（記事）</span><span class="track"><span class="fill" style="width:26%"></span></span><span class="val">106回</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next">
+      <h3>来月やること</h3>
+      <ol>
+        <li>Googleマップの写真を5枚追加する（施術室・外観・びわエキス）。マップからの流入がいちばん多いので、ここが効きます。</li>
+        <li>「大分 更年期 だるさ」で記事を1本書く。この言葉はまだ誰も書いていません。</li>
+        <li>お客様の声を2件いただく。掲載許諾のお願い文はこちらで用意します。</li>
+      </ol>
+    </div>
+
+    <p class="foot-note">
+      計測には Google アナリティクス（GA4）と Google サーチコンソールを使います。どちらも無料です。<br>
+      予約ボタンのタップ数は、LINE・電話それぞれのボタンにイベントを仕込んで数えます。お客様の個人情報は取得しません。
+    </p>
+  </section>
+</main>
+
+<script>
+/* タブ */
+const tabs=[...document.querySelectorAll('[role="tab"]')];
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>{
+    const on = x===t;
+    x.setAttribute('aria-selected', String(on));
+    document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+  });
+}));
+/* #p2 / #p3 で直接そのタブを開けるようにする（レビュー用） */
+(function(){
+  const id=(location.hash||'').replace('#','');
+  const t=tabs.find(x=>x.getAttribute('aria-controls')===id);
+  if(t) t.click();
+})();
+
+/* 空き状況エディタ：押すたびに ○→△→×→休 */
+(function(){
+  const DOW=['日','月','火','水','木','金','土'];
+  const ORDER=['o','t','x','off'];
+  const M={o:{s:'○',c:'mk-o'},t:{s:'△',c:'mk-t'},x:{s:'×',c:'mk-x'},off:{s:'休',c:''}};
+  const g=document.getElementById('edGrid'); if(!g) return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const start=new Date(today); start.setDate(start.getDate()-start.getDay());
+  let h=DOW.map(n=>`<div class="dow">${n}</div>`).join('');
+  for(let i=0;i<14;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const st = d.getDay()===2 ? 'off' : (i%5===3 ? 'x' : i%3===1 ? 't' : 'o');
+    h+=`<button type="button" class="ed-cell${st==='off'?' off':''}" data-st="${st}" aria-label="${d.getMonth()+1}月${d.getDate()}日">
+      <span class="d">${d.getDate()}</span><span class="s ${M[st].c}${st==='off'?' txt':''}">${M[st].s}</span></button>`;
+  }
+  g.innerHTML=h;
+  g.addEventListener('click',e=>{
+    const b=e.target.closest('.ed-cell'); if(!b) return;
+    const next=ORDER[(ORDER.indexOf(b.dataset.st)+1)%ORDER.length];
+    b.dataset.st=next; b.classList.toggle('off', next==='off');
+    b.querySelector('.s').className='s '+M[next].c+(next==='off'?' txt':'');
+    b.querySelector('.s').textContent=M[next].s;
+  });
+  document.getElementById('edSave').addEventListener('click',function(){
+    const o=this.textContent; this.textContent='保存しました'; setTimeout(()=>this.textContent=o,1600);
+  });
+})();
+
+/* 縦棒グラフ。値の直接表示は最新の月だけ、あとはホバーで出す */
+(function(){
+  const draw=(id,xid,vals,labels,unit)=>{
+    const wrap=document.getElementById(id), xw=document.getElementById(xid); if(!wrap) return;
+    const max=Math.max(...vals);
+    wrap.innerHTML=vals.map((v,i)=>{
+      const last=i===vals.length-1;
+      return `<div class="bar${last?'':' mute'}" tabindex="0" role="presentation">
+        <span class="tip">${labels[i]}　${v.toLocaleString()}${unit}</span>
+        ${last?`<b>${v.toLocaleString()}</b>`:''}
+        <i style="height:${Math.round(v/max*100)}%"></i></div>`;
+    }).join('');
+    xw.innerHTML=labels.map(l=>`<span>${l}</span>`).join('');
+  };
+  draw('barsView','barsViewX',[186,204,248,301,349,412],['4月','5月','6月','7月','8月','9月'],'人');
+  draw('barsTap','barsTapX',[9,11,16,21,28,37],['4月','5月','6月','7月','8月','9月'],'回');
+})();
+</script>
+</body>
+</html>

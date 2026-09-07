@@ -1,0 +1,774 @@
+@charset "UTF-8";
+/* ==========================================================
+   ぬくもりサロン ひつじのうたた寝 — プロトタイプ
+   デザインの決めごと
+   - 面は「生成り（ダマスク）」と「濃茶」の2種類だけ。中間色の面は作らない
+   - アクセントは銅色 1 色。金・緑は使わない
+   - 見出しはすべて明朝。ゴシックは数字・ラベル・UI にだけ使う
+   - CTA の階層 = 銅の面（LINE予約）＞ 銅の線（電話・空き状況）＞ テキストリンク
+   ========================================================== */
+
+:root{
+  /* 面 */
+  --cream:#F1E6D8;         /* 生成りの地 */
+  --cream-hi:#FAF3E9;      /* 明るい生成り（カードの面） */
+  --cream-lo:#E6D6C2;      /* ダマスク柄の濃いほう */
+  --espresso:#241811;      /* 最暗部 */
+  --brown-dark:#33231A;    /* 濃茶の面 */
+  --brown-mid:#4B3527;
+
+  /* 文字 */
+  --ink:#3A281E;           /* 生成り地の本文 */
+  --ink-strong:#2A1B12;    /* 生成り地の見出し */
+  --ink-mute:#634C3B;
+  --on-dark:#F3E7D8;       /* 濃茶地の本文 */
+  --on-dark-mute:#C9B49E;
+
+  /* アクセント */
+  --copper:#A55F3B;      /* 面（ボタンの地）専用 */
+  --copper-lt:#D08E67;   /* 濃茶の面に置く文字・線 */
+  --copper-deep:#7A4529; /* 線と小さい文字。生成り地の上で使う */
+
+  /* 線 */
+  --line:#D8C6B0;
+  --line-dark:#5A4132;
+
+  --serif:"Shippori Mincho","Hiragino Mincho ProN","ヒラギノ明朝 ProN","Yu Mincho","YuMincho",serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","ヒラギノ角ゴシック","Yu Gothic","YuGothic",sans-serif;
+
+  --shell:1180px;
+  --gut:32px;
+  --bar-h:0px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:88px;}
+body{
+  margin:0; background:var(--cream); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:2.0; letter-spacing:.045em;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  padding-bottom:var(--bar-h);
+  /* 日本語を文節単位で折る。行末に 1 文字だけ残るのも防ぐ */
+  word-break:auto-phrase; line-break:strict; text-wrap:pretty;
+}
+/* 途中で折られたくない語に付ける */
+.nb{display:inline-block;}
+img{max-width:100%; height:auto; display:block;}
+a{color:inherit;}
+h1,h2,h3,h4{font-family:var(--serif); font-weight:500; margin:0; line-height:1.55; letter-spacing:.09em; color:var(--ink-strong);}
+p{margin:0;}
+ul{margin:0; padding:0; list-style:none;}
+button{font:inherit; color:inherit;}
+
+.shell{max-width:var(--shell); margin:0 auto; padding:0 var(--gut); width:100%;}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+.skip{position:absolute; left:-9999px; top:0; z-index:999; background:var(--copper); color:#fff; padding:12px 20px;}
+.skip:focus{left:0;}
+
+/* ---- 生成り地のダマスク（面に必ず柄が乗る。ここがこのサイトの地の顔） ---- */
+.damask,.damask-hi{
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20360%20440%22%20width%3D%22360%22%20height%3D%22440%22%3E%3Cdefs%3E%3Cg%20id%3D%22rs%22%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%280%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%2824%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%2848%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%2872%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%2896%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28120%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28144%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28168%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28192%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28216%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28240%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28264%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28288%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28312%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-11C-5.5%20-17%20-6.8%20-29%200%20-35C6.8%20-29%205.5%20-17%200%20-11Z%22%20transform%3D%22rotate%28336%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%2812%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%2836%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%2860%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%2884%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28108%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28132%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28156%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28180%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28204%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28228%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28252%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28276%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28300%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28324%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Cpath%20d%3D%22M0%20-7C-3.6%20-11%20-4.4%20-18%200%20-22C4.4%20-18%203.6%20-11%200%20-7Z%22%20transform%3D%22rotate%28348%29%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%22.6%22%2F%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Ccircle%20cx%3D%226.2%22%20cy%3D%220.0%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%224.4%22%20cy%3D%224.4%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%220.0%22%20cy%3D%226.2%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-4.4%22%20cy%3D%224.4%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-6.2%22%20cy%3D%220.0%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-4.4%22%20cy%3D%22-4.4%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-0.0%22%20cy%3D%22-6.2%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%224.4%22%20cy%3D%22-4.4%22%20r%3D%221.3%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20r%3D%222%22%20fill%3D%22%23C0B096%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22md%22%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%280%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%2830%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%2860%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%2890%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28120%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28150%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28180%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28210%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28240%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28270%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28300%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-6C-3.8%20-10%20-4.6%20-18%200%20-22C4.6%20-18%203.8%20-10%200%20-6Z%22%20transform%3D%22rotate%28330%29%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Ccircle%20r%3D%226%22%20fill%3D%22%23DCD2C2%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Ccircle%20cx%3D%223.4%22%20cy%3D%220.0%22%20r%3D%221%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%221.1%22%20cy%3D%223.2%22%20r%3D%221%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-2.8%22%20cy%3D%222.0%22%20r%3D%221%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%22-2.8%22%20cy%3D%22-2.0%22%20r%3D%221%22%20fill%3D%22%23C0B096%22%2F%3E%3Ccircle%20cx%3D%221.1%22%20cy%3D%22-3.2%22%20r%3D%221%22%20fill%3D%22%23C0B096%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22lf%22%3E%3Cpath%20d%3D%22M0%202C5%20-8%2012%20-14%2020%20-16C18%20-11%2021%20-9%2026%20-11C31%20-18%2038%20-22%2046%20-22C44%20-16%2047%20-14%2052%20-16C57%20-20%2062%20-19%2066%20-15C60%20-5%2048%204%2034%209C22%2013%208%2011%200%202Z%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.75%22%2F%3E%3Cpath%20d%3D%22M3%203C17%200%2038%20-6%2062%20-15%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%220.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M14%205C20%200%2026%20-4%2031%20-6M28%207C34%202%2040%20-2%2045%20-5M42%206C47%202%2052%20-1%2057%20-4%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%220.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22ls%22%3E%3Cpath%20d%3D%22M0%200C6%20-8%2016%20-12%2026%20-10C22%20-3%2012%204%200%200Z%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M2%20-1C10%20-3%2018%20-6%2024%20-9%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%220.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22bd%22%3E%3Cpath%20d%3D%22M0%200C-7%20-5%20-8%20-17%200%20-23C8%20-17%207%20-5%200%200Z%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20-1V-19M-3.5%20-4C-5%20-9%20-5%20-14%20-3%20-18M3.5%20-4C5%20-9%205%20-14%203%20-18%22%20fill%3D%22none%22%20stroke%3D%22%23CBBDA6%22%20stroke-width%3D%220.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-6%201C-11%20-2%20-13%20-7%20-12%20-12M6%201C11%20-2%2013%20-7%2012%20-12%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22br%22%3E%3Ccircle%20r%3D%222.6%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%22.7%22%2F%3E%3C%2Fg%3E%3Cg%20id%3D%22art%22%3E%3Cpath%20d%3D%22M40%20-20C74%2040%2060%20110%2020%20150C-20%20190%20-30%20250%2010%20300C50%20350%2060%20410%2030%20462%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M220%20-20C186%2040%20200%20108%20240%20148C280%20188%20292%20248%20252%20298C212%20348%20200%20410%20230%20462%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M20%20150C60%20156%2096%20148%20126%20124C156%20100%20186%2092%20218%20100%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M10%20300C52%20306%2090%20298%20120%20274C150%20250%20182%20242%20214%20250%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M240%20148C280%20154%20316%20146%20346%20122C362%20108%20372%20100%20384%2096%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M252%20298C292%20304%20328%20296%20358%20272%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M126%20124C132%2088%20122%2058%20100%2036%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M120%20274C126%20238%20116%20208%2094%20186%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M60%20110C92%2096%20116%2074%20130%2044%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M200%20108C168%2094%20144%2072%20130%2042%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M292%20248C324%20234%20348%20212%20362%20182%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-30%20250C2%20236%2026%20214%2040%20184%22%20fill%3D%22none%22%20stroke%3D%22%23C0B096%22%20stroke-width%3D%220.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28128%2C126%29%20rotate%284%29%20scale%281.0%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28122%2C276%29%20rotate%286%29%20scale%280.96%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28310%2C60%29%20rotate%2810%29%20scale%280.86%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28300%2C352%29%20rotate%280%29%20scale%280.84%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28-24%2C60%29%20rotate%28-12%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28-24%2C392%29%20rotate%28-12%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%28216%2C196%29%20rotate%28-12%29%20scale%280.72%29%22%2F%3E%3Cuse%20href%3D%22%23rs%22%20transform%3D%22translate%2838%2C206%29%20rotate%28-6%29%20scale%280.7%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28214%2C100%29%20rotate%2813%29%20scale%280.95%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28206%2C250%29%20rotate%28-13%29%20scale%280.92%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%2852%2C42%29%20rotate%28-11%29%20scale%280.85%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%2846%2C352%29%20rotate%287%29%20scale%280.85%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28346%2C180%29%20rotate%287%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28180%2C400%29%20rotate%28-15%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%2888%2C168%29%20rotate%281%29%20scale%280.7%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28268%2C144%29%20rotate%281%29%20scale%280.72%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%2878%2C318%29%20rotate%28-9%29%20scale%280.72%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28340%2C300%29%20rotate%28-5%29%20scale%280.7%29%22%2F%3E%3Cuse%20href%3D%22%23md%22%20transform%3D%22translate%28160%2C32%29%20rotate%28-5%29%20scale%280.66%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%2846%2C60%29%20rotate%28-28%29%20scale%281.0%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%2870%2C124%29%20rotate%28168%29%20scale%280.92%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%2828%2C176%29%20rotate%2842%29%20scale%280.95%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%286%2C244%29%20rotate%28-34%29%20scale%280.9%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%2828%2C320%29%20rotate%28152%29%20scale%280.9%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%2856%2C392%29%20rotate%28-20%29%20scale%280.85%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28150%2C148%29%20rotate%28-18%29%20scale%280.95%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28196%2C124%29%20rotate%28158%29%20scale%280.85%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28146%2C300%29%20rotate%28-16%29%20scale%280.95%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28192%2C276%29%20rotate%28160%29%20scale%280.85%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28250%2C178%29%20rotate%2832%29%20scale%280.92%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28276%2C214%29%20rotate%28-142%29%20scale%280.86%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28258%2C60%29%20rotate%28-34%29%20scale%280.88%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28264%2C330%29%20rotate%2844%29%20scale%280.86%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28330%2C120%29%20rotate%28150%29%20scale%280.82%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28336%2C244%29%20rotate%28-30%29%20scale%280.84%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28112%2C60%29%20rotate%28124%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28104%2C212%29%20rotate%28-56%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28100%2C360%29%20rotate%28120%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28216%2C352%29%20rotate%28-50%29%20scale%280.8%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28348%2C392%29%20rotate%28140%29%20scale%280.78%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28-14%2C140%29%20rotate%2860%29%20scale%280.78%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28-10%2C300%29%20rotate%28-60%29%20scale%280.78%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28178%2C68%29%20rotate%2870%29%20scale%280.76%29%22%2F%3E%3Cuse%20href%3D%22%23lf%22%20transform%3D%22translate%28170%2C220%29%20rotate%28-100%29%20scale%280.76%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%2896%2C96%29%20rotate%28-40%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28154%2C196%29%20rotate%28140%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%2892%2C248%29%20rotate%28-30%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28160%2C344%29%20rotate%28146%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28238%2C206%29%20rotate%28-24%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28300%2C268%29%20rotate%28150%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%2834%2C140%29%20rotate%2866%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28300%2C160%29%20rotate%28-70%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%2860%2C286%29%20rotate%28120%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28210%2C140%29%20rotate%28-64%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28268%2C392%29%20rotate%2840%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28126%2C404%29%20rotate%28-120%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28352%2C60%29%20rotate%28-30%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%2812%2C392%29%20rotate%28150%29%22%2F%3E%3Cuse%20href%3D%22%23ls%22%20transform%3D%22translate%28184%2C164%29%20rotate%2820%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%2884%2C72%29%20rotate%28-24%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%2874%2C232%29%20rotate%28-16%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28160%2C116%29%20rotate%2818%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28154%2C262%29%20rotate%2820%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28286%2C110%29%20rotate%28-30%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28280%2C306%29%20rotate%28-22%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%2836%2C300%29%20rotate%2810%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28228%2C44%29%20rotate%28-14%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28222%2C392%29%20rotate%2812%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28348%2C214%29%20rotate%2826%29%22%2F%3E%3Cuse%20href%3D%22%23bd%22%20transform%3D%22translate%28112%2C340%29%20rotate%28-40%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28102%2C110%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28108%2C150%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2866%2C196%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2872%2C236%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28140%2C240%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28196%2C164%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28230%2C132%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28266%2C180%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28296%2C224%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2844%2C262%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2852%2C300%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28126%2C320%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28180%2C332%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28236%2C282%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28302%2C314%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28330%2C86%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2820%2C86%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2816%2C352%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28200%2C60%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28276%2C64%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28346%2C352%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28150%2C392%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%2896%2C428%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28258%2C428%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28190%2C10%29%22%2F%3E%3Cuse%20href%3D%22%23br%22%20transform%3D%22translate%28340%2C150%29%22%2F%3E%3C%2Fg%3E%3C%2Fdefs%3E%3Cg%20opacity%3D%220.2%22%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22-360%22%20y%3D%22-440%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22-360%22%20y%3D%220%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22-360%22%20y%3D%22440%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%220%22%20y%3D%22-440%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%220%22%20y%3D%220%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%220%22%20y%3D%22440%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22360%22%20y%3D%22-440%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22360%22%20y%3D%220%22%2F%3E%3Cuse%20href%3D%22%23art%22%20x%3D%22360%22%20y%3D%22440%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-size:300px 366px;
+  background-repeat:repeat;
+}
+.damask{background-color:var(--cream);}
+.damask-hi{background-color:var(--cream-hi);}
+
+/* 濃茶の面。写真の上に乗ることが多いので、必ず veil とセットで使う */
+.dark{background:var(--brown-dark); color:var(--on-dark);}
+.dark h1,.dark h2,.dark h3,.dark h4{color:var(--on-dark);}
+
+/* ---- 見出しの型（ラベル＋明朝の2行） ---- */
+.eyebrow{
+  font-family:var(--sans); font-size:10.5px; font-weight:500;
+  letter-spacing:.3em; color:var(--copper-deep); text-transform:uppercase;
+  display:flex; align-items:center; gap:12px; margin-bottom:16px;
+}
+.eyebrow::before{content:""; width:26px; height:1px; background:var(--copper-deep); flex:none;}
+.dark .eyebrow{color:var(--copper-lt);}
+.dark .eyebrow::before{background:var(--copper-lt);}
+.h2{font-size:clamp(25px,3.4vw,36px);}
+.lead{margin-top:20px; color:var(--ink-mute); font-size:14.5px; line-height:2.1;}
+.dark .lead{color:var(--on-dark-mute);}
+
+/* ---- ボタン ---- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  min-height:54px; padding:15px 30px; text-decoration:none;
+  font-family:var(--sans); font-size:13.5px; font-weight:500; letter-spacing:.13em;
+  border:1px solid transparent; border-radius:2px; cursor:pointer;
+  transition:background .28s ease, color .28s ease, border-color .28s ease;
+}
+.btn .ar{transition:transform .28s ease;}
+.btn:hover .ar{transform:translateX(4px);}
+/* 1. 最重要 CV = 銅の面 */
+.btn-primary{background:var(--copper); color:#FFF8F1; border-color:var(--copper);}
+.btn-primary:hover{background:var(--copper-deep); border-color:var(--copper-deep);}
+/* 2. 第2 CV = 銅の線 */
+.btn-ghost{background:transparent; color:var(--copper-deep); border-color:var(--copper-deep);}
+.btn-ghost:hover{background:var(--copper); color:#FFF8F1;}
+.dark .btn-ghost{color:var(--copper-lt); border-color:var(--copper-lt);}
+.dark .btn-ghost:hover{background:var(--copper-lt); color:var(--espresso);}
+/* 3. 補助 = テキストリンク */
+.tlink{
+  display:inline-flex; align-items:center; gap:9px; min-height:44px;
+  font-size:12.5px; letter-spacing:.14em; color:var(--copper-deep); text-decoration:none;
+  border-bottom:1px solid var(--line);
+}
+.tlink:hover{border-bottom-color:var(--copper);}
+.dark .tlink{color:var(--copper-lt); border-bottom-color:var(--line-dark);}
+.btn-sm{min-height:44px; padding:11px 20px; font-size:12px;}
+
+/* ==========================================================
+   ヘッダー
+   ========================================================== */
+.hd{
+  position:fixed; inset:0 0 auto 0; z-index:60;
+  padding:14px 0; transition:background .3s ease, box-shadow .3s ease, padding .3s ease;
+}
+.hd::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(to bottom, rgba(36,24,17,.62), rgba(36,24,17,0));
+  transition:opacity .3s ease;
+}
+.hd.stuck{background:rgba(250,243,233,.96); box-shadow:0 1px 0 var(--line); padding:9px 0;}
+.hd.stuck::before{opacity:0;}
+.hd-in{display:flex; align-items:center; gap:26px;}
+
+.brand{display:flex; align-items:center; gap:12px; text-decoration:none; flex:none;}
+.brand-mark{
+  width:48px; height:48px; flex:none; border-radius:50%; overflow:hidden;
+  border:1px solid rgba(233,214,190,.55); background:rgba(255,250,244,.08);
+  display:grid; place-items:center;
+}
+.brand-mark img{width:36px; height:auto;}
+.hd.stuck .brand-mark{border-color:var(--copper-lt); background:#FFFBF4;}
+.ft .brand-mark{border-color:var(--line-dark); background:rgba(255,250,244,.06);}
+.brand-tx{line-height:1.3;}
+.brand-tx small{display:block; font-family:var(--serif); font-size:10.5px; letter-spacing:.24em; color:#E4D3BE;}
+.brand-tx strong{display:block; font-family:var(--serif); font-size:19px; font-weight:500; letter-spacing:.16em; color:#FFF6EA;}
+.hd.stuck .brand-tx small{color:var(--ink-mute);}
+.hd.stuck .brand-tx strong{color:var(--ink-strong);}
+
+
+.gnav{display:flex; gap:26px; margin-left:auto;}
+.gnav a{
+  font-size:13px; letter-spacing:.1em; text-decoration:none; color:#F0E2D0;
+  padding:6px 0; border-bottom:1px solid transparent; white-space:nowrap;
+}
+.gnav a:hover,.gnav a[aria-current="page"]{border-bottom-color:var(--copper-lt); color:#fff;}
+.hd.stuck .gnav a{color:var(--ink);}
+.hd.stuck .gnav a:hover,.hd.stuck .gnav a[aria-current="page"]{color:var(--copper); border-bottom-color:var(--copper);}
+.hd .btn{flex:none;}
+.burger{display:none; width:44px; height:44px; margin-left:auto; background:none; border:0; padding:10px; cursor:pointer;}
+.burger i{display:block; height:1.5px; background:#F0E2D0; margin:5px 0; transition:.3s;}
+.hd.stuck .burger i{background:var(--ink);}
+
+/* ==========================================================
+   01 ヒーロー
+   何の店かを 3 秒で。 地域 ＋ 施術名 ＋ 完全予約制 ＋ 予約ボタン ＋ 今日の空き
+   ========================================================== */
+.hero{position:relative; min-height:min(96vh,860px); display:flex; align-items:flex-end; isolation:isolate; overflow:hidden;}
+.hero-media{position:absolute; inset:0; z-index:0;}
+.hero-media picture{display:block; width:100%; height:100%;}
+.hero-media img{width:100%; height:100%; object-fit:cover; object-position:52% 62%; filter:saturate(1) brightness(1.04);}
+/* 文字が乗る左側は濃く残し、右（被写体）で一気に抜く。一律に薄めないこと */
+.hero-veil{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(to bottom, rgba(30,19,13,.58) 0%, rgba(30,19,13,.14) 22%, rgba(30,19,13,0) 40%),
+    linear-gradient(96deg, rgba(28,18,12,.93) 0%, rgba(28,18,12,.88) 33%, rgba(28,18,12,.60) 46%, rgba(28,18,12,.14) 66%, rgba(28,18,12,0) 84%),
+    linear-gradient(to top, rgba(28,18,12,.52) 0%, rgba(28,18,12,0) 26%);
+}
+.hero-in{position:relative; z-index:2; width:100%; padding:150px var(--gut) 46px;}
+.hero-grid{display:flex; align-items:flex-end; gap:30px;}
+.hero-vert{
+  position:absolute; left:0; top:50%; transform:translateY(-42%);
+  writing-mode:vertical-rl; font-family:var(--serif); font-size:12px;
+  letter-spacing:.4em; color:rgba(255,244,232,.62);
+  padding-bottom:26px;
+}
+.hero-vert::after{content:""; position:absolute; left:50%; bottom:0; width:1px; height:18px; background:rgba(255,244,232,.4);}
+.hero-grid{position:relative;}
+.hero-body{padding-left:74px;}
+.hero-body{max-width:640px;}
+.hero-h1{font-size:clamp(31px,5.1vw,54px); line-height:1.5; color:#FFF7EC; letter-spacing:.08em; text-wrap:balance;}
+.hero-sub{margin-top:22px; font-size:14px; line-height:2.05; color:#F2E4D3; letter-spacing:.08em;}
+.hero-sub b{display:block; font-weight:500; font-size:15.5px; color:#FFF7EC;}
+.hero-acts{display:flex; flex-wrap:wrap; gap:12px; margin-top:30px;}
+
+/* 今日／明日の空き。ヒーロー内に置く＝「開いているか」を最初に答える */
+.hero-open{
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  margin-top:26px; padding:13px 20px; border:1px solid rgba(255,244,232,.3);
+  background:rgba(28,18,12,.5); border-radius:2px;
+}
+.hero-open dt{font-size:11px; letter-spacing:.2em; color:var(--on-dark-mute);}
+.hero-open dd{margin:0; display:flex; align-items:center; gap:8px; font-size:13px; color:#FFF7EC;}
+.hero-open .mk{font-size:17px; line-height:1;}
+.mk-o{color:#8FBE7E;} .mk-t{color:#E0B15E;} .mk-x{color:#B98B7C;}   /* 濃茶の面に置くとき */
+.cal .mk-o,.cal-legend .mk-o,.bar .mk-o{color:#4F7A43;}                          /* 白の面に置くとき */
+.cal .mk-t,.cal-legend .mk-t,.bar .mk-t{color:#8A5F16;}
+.cal .mk-x,.cal-legend .mk-x,.bar .mk-x{color:#9C4F3F;}
+
+/* ==========================================================
+   02 クイックナビ ＝ レイヤーの入口
+   「探しているもの」に1タップで飛ばす。ここより下は読み物。
+   ========================================================== */
+.quick{position:relative; z-index:5; margin-top:-46px;}
+.quick-grid{
+  display:grid; grid-template-columns:repeat(6,1fr); gap:1px;
+  background:var(--line); border:1px solid var(--line);
+  box-shadow:0 18px 44px rgba(50,32,20,.16);
+}
+.quick-grid a{
+  background:var(--cream-hi); text-decoration:none; color:var(--ink);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px;
+  padding:26px 8px 22px; min-height:124px; text-align:center;
+  transition:background .25s ease, color .25s ease;
+}
+.quick-grid a:hover{background:var(--copper); color:#FFF8F1;}
+.quick-grid a:hover svg{stroke:#FFF8F1;}
+.quick-grid svg{width:26px; height:26px; stroke:var(--copper-deep); fill:none; stroke-width:1.3; transition:stroke .25s ease;}
+.quick-grid span{font-size:12.5px; letter-spacing:.08em; line-height:1.5;}
+.quick-grid em{display:block; font-style:normal; font-size:10px; letter-spacing:.16em; opacity:.6; margin-top:3px;}
+
+/* ==========================================================
+   セクション共通
+   ========================================================== */
+.sec{padding:96px 0;}
+.sec-sm{padding:70px 0;}
+.sec-head{max-width:640px;}
+.sec-head.center{margin:0 auto; text-align:center;}
+.sec-head.center .eyebrow{justify-content:center;}
+.sec-foot{margin-top:44px; display:flex; justify-content:center;}
+
+/* ==========================================================
+   03 お悩みから選ぶ（悩み → メニューへの近道）
+   ========================================================== */
+.concern-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:44px;}
+.concern{
+  background:var(--cream-hi); border:1px solid var(--line); padding:28px 22px 22px;
+  text-decoration:none; color:var(--ink); display:flex; flex-direction:column;
+  transition:border-color .25s ease, transform .25s ease;
+}
+.concern:hover{border-color:var(--copper); transform:translateY(-3px);}
+.concern-ic{width:38px; height:38px; stroke:var(--copper-deep); fill:none; stroke-width:1.2; margin-bottom:16px;}
+.concern h3{font-size:17px; line-height:1.7;}
+.concern p{margin-top:10px; font-size:12.5px; line-height:1.95; color:var(--ink-mute); flex:1;}
+.concern .go{margin-top:16px; font-size:11.5px; letter-spacing:.14em; color:var(--copper-deep); display:flex; align-items:center; gap:7px; white-space:nowrap;}
+
+/* ==========================================================
+   04 サロン紹介 ＋ 写真モザイク（左テキスト／右 3 枚組）
+   ========================================================== */
+.about-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:52px; align-items:center;}
+.mosaic{display:grid; grid-template-columns:1.25fr 1fr; grid-template-rows:repeat(2,214px); gap:10px;}
+.mosaic figure{margin:0; overflow:hidden; background:var(--cream-lo);}
+.mosaic img{width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.6,.2,1);}
+.mosaic figure:hover img{transform:scale(1.05);}
+.mosaic .m1{grid-row:span 2;}
+
+/* ==========================================================
+   05 びわ温熱療法とは（濃茶＋写真右）
+   ========================================================== */
+.biwa{position:relative; overflow:hidden;}
+.biwa-media{position:absolute; inset:0 0 0 46%; z-index:0;}
+.biwa-media img{width:100%; height:100%; object-fit:cover; object-position:50% 46%;}
+.biwa-media::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, var(--brown-dark) 0%, rgba(51,35,26,.9) 20%, rgba(51,35,26,.42) 52%, rgba(51,35,26,.1) 84%, rgba(51,35,26,0) 100%);
+}
+.biwa .shell{position:relative; z-index:1;}
+.biwa-body{max-width:620px;}
+.biwa-pts{display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:42px;}
+.biwa-pt{text-align:center;}
+.biwa-pt .ring{
+  width:56px; height:56px; margin:0 auto 12px; border:1px solid var(--copper-lt);
+  border-radius:50%; display:grid; place-items:center;
+}
+.biwa-pt svg{width:24px; height:24px; stroke:var(--copper-lt); fill:none; stroke-width:1.2;}
+.biwa-pt b{display:block; font-family:var(--serif); font-size:14px; font-weight:500; color:#FFF3E4; letter-spacing:.08em;}
+.biwa-pt span{display:block; margin-top:8px; font-size:12px; line-height:1.85; color:var(--on-dark-mute);}
+
+/* ==========================================================
+   06 メニュー（写真つきカード＋料金）
+   ========================================================== */
+.menu-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:44px;}
+.mcard{
+  display:grid; grid-template-columns:150px 1fr; gap:0;
+  background:var(--cream-hi); border:1px solid var(--line);
+  text-decoration:none; color:var(--ink); overflow:hidden;
+  transition:border-color .25s ease, box-shadow .25s ease;
+}
+.mcard:hover{border-color:var(--copper); box-shadow:0 10px 26px rgba(50,32,20,.1);}
+.mcard{min-height:192px;}
+.mcard-ph{position:relative; overflow:hidden; background:var(--cream-lo);}
+.mcard-ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.6,.2,1);}
+.mcard:hover .mcard-ph img{transform:scale(1.06);}
+.mcard-bd{padding:22px 22px 20px; display:flex; flex-direction:column;}
+.mcard h3{font-size:17.5px;}
+.mcard h3 em{display:block; font-style:normal; font-size:11px; letter-spacing:.16em; color:var(--ink-mute); margin-top:5px; font-family:var(--sans);}
+.mcard p{margin-top:10px; font-size:12.5px; line-height:1.95; color:var(--ink-mute); flex:1;}
+.mcard-foot{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line);}
+.mcard-time{font-size:11.5px; letter-spacing:.1em; color:var(--ink-mute);}
+.mcard-price{font-family:var(--serif); font-size:21px; color:var(--copper-deep); letter-spacing:.04em;}
+.mcard-price small{font-size:11.5px; font-family:var(--sans); letter-spacing:.08em;}
+
+/* ==========================================================
+   07 空き状況カレンダー ＋ 予約 3 ステップ（この 2 つで予約導線が完結する）
+   ========================================================== */
+.book-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:44px; align-items:start; margin-top:44px;}
+.cal{background:var(--cream-hi); border:1px solid var(--line); padding:24px;}
+.cal-hd{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px;}
+.cal-hd b{font-family:var(--serif); font-size:16px; font-weight:500;}
+.cal-upd{font-size:10.5px; letter-spacing:.12em; color:var(--ink-mute);}
+.cal-week{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+.cal-week .dow{text-align:center; font-size:10.5px; letter-spacing:.1em; color:var(--ink-mute); padding-bottom:6px;}
+.cal-week .dow.sat{color:#45647F;} .cal-week .dow.sun{color:#8E4A40;}
+.day{
+  border:1px solid var(--line); background:#fff; padding:8px 4px 9px; text-align:center;
+  cursor:pointer; transition:border-color .2s ease, background .2s ease; border-radius:2px;
+}
+.day:hover:not(.is-off):not(.is-x){border-color:var(--copper); background:#FFF9F1;}
+.day.is-sel{border-color:var(--copper); background:#F7E5D6; box-shadow:inset 0 0 0 1px var(--copper);}
+.day.is-off,.day.is-x{cursor:default; background:#EFE7DC; color:#74604F;}
+.day .d{display:block; font-family:var(--serif); font-size:15px; line-height:1.2;}
+.day .s{display:block; font-size:17px; font-weight:600; line-height:1.35; margin-top:3px;}
+.day .s.txt{font-size:10.5px; letter-spacing:.06em;}
+.cal-legend{display:flex; flex-wrap:wrap; gap:18px; margin-top:18px; font-size:11.5px; color:var(--ink-mute);}
+.cal-legend b{font-size:14px;}
+.cal-legend span{display:inline-flex; align-items:center; gap:5px;}
+.cal-pick{
+  margin-top:18px; padding:16px 18px; border:1px dashed var(--line); background:#FFFBF5;
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+}
+.cal-pick p{font-size:13px;}
+.cal-pick b{font-family:var(--serif); font-size:16px; color:var(--copper-deep);}
+
+.steps{counter-reset:st;}
+.step{display:grid; grid-template-columns:44px 1fr; gap:16px; padding:18px 0; border-bottom:1px solid var(--line);}
+.step:last-child{border-bottom:0;}
+.step .no{
+  counter-increment:st; width:38px; height:38px; border:1px solid var(--copper); border-radius:50%;
+  display:grid; place-items:center; font-family:var(--serif); font-size:14px; color:var(--copper);
+}
+.step .no::before{content:"0" counter(st);}
+.step h4{font-size:15.5px;}
+.step p{margin-top:7px; font-size:12.5px; line-height:1.95; color:var(--ink-mute);}
+.book-note{margin-top:18px; font-size:11.5px; line-height:1.9; color:var(--ink-mute);}
+
+/* ==========================================================
+   08 お客様の声
+   ========================================================== */
+.voice-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:44px;}
+.voice{background:var(--cream-hi); border:1px solid var(--line); padding:28px 24px; display:flex; flex-direction:column;}
+.voice .q{font-family:var(--serif); font-size:34px; line-height:1; color:var(--copper);}
+.voice h3{font-size:16px; margin-top:10px; line-height:1.75;}
+.voice p{margin-top:12px; font-size:12.5px; line-height:2.0; color:var(--ink-mute); flex:1;}
+.voice .who{margin-top:16px; padding-top:13px; border-top:1px solid var(--line); font-size:11.5px; letter-spacing:.1em; color:var(--ink-mute);}
+.voice .who b{color:var(--ink); font-weight:500;}
+
+/* ==========================================================
+   09 選ばれる理由
+   ========================================================== */
+.reason-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:44px;}
+.reason{text-align:center;}
+.reason .no{font-family:var(--serif); font-size:12px; letter-spacing:.3em; color:var(--copper-lt);}
+.reason h3{font-size:19.5px; margin-top:13px;}
+.reason p{margin-top:14px; font-size:13.5px; line-height:2.1; color:var(--on-dark-mute);}
+
+/* ==========================================================
+   10 代表挨拶
+   ========================================================== */
+.msg-grid{display:grid; grid-template-columns:.8fr 1.2fr; gap:52px; align-items:center;}
+.msg-ph{position:relative;}
+.msg-ph img{width:100%; height:auto; aspect-ratio:1044/1566; object-fit:contain; background:var(--cream);}
+.msg-ph figcaption{
+  margin-top:12px; font-size:12px; letter-spacing:.12em; color:var(--ink-mute);
+}
+.msg-body h2{font-size:clamp(23px,3vw,31px);}
+.msg-body p{margin-top:22px; font-size:14px; line-height:2.2; color:var(--ink-mute);}
+.msg-sign{margin-top:26px; display:flex; align-items:baseline; gap:14px;}
+.msg-sign small{font-size:11px; letter-spacing:.18em; color:var(--ink-mute);}
+.msg-sign b{font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:.14em;}
+.badge{
+  display:inline-flex; align-items:center; gap:9px; margin-top:22px;
+  border:1px solid var(--copper-deep); color:var(--copper-deep); padding:9px 16px;
+  font-size:12px; letter-spacing:.12em; border-radius:2px; background:#FFF6EC;
+}
+
+/* ==========================================================
+   11 ブログ／お知らせ
+   ========================================================== */
+.post-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:44px;}
+.post{background:var(--cream-hi); border:1px solid var(--line); text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .25s ease;}
+.post:hover{border-color:var(--copper);}
+.post-ph{aspect-ratio:16/10; overflow:hidden; background:var(--cream-lo);}
+.post-ph img{width:100%; height:100%; object-fit:cover;}
+.post-bd{padding:20px 20px 22px; display:flex; flex-direction:column; flex:1;}
+.post-meta{display:flex; align-items:center; gap:10px; font-size:10.5px; letter-spacing:.12em; color:var(--ink-mute);}
+.post-cat{background:var(--copper-deep); color:#FFF8F1; padding:3px 9px; letter-spacing:.1em;}
+.post h3{font-size:15.5px; margin-top:12px; line-height:1.75; flex:1;}
+
+/* ==========================================================
+   12 FAQ（アコーディオン）
+   ========================================================== */
+.faq-list{max-width:820px; margin:44px auto 0; border-top:1px solid var(--line);}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{
+  width:100%; background:none; border:0; text-align:left; cursor:pointer;
+  display:flex; align-items:flex-start; gap:16px; padding:22px 4px;
+  font-family:var(--serif); font-size:15.5px; letter-spacing:.07em; line-height:1.7; color:var(--ink-strong);
+}
+.faq-q .qm{font-size:13px; color:var(--copper-deep); letter-spacing:.1em; flex:none; padding-top:3px; font-family:var(--sans);}
+.faq-q .pm{margin-left:auto; flex:none; width:16px; height:16px; position:relative; margin-top:6px;}
+.faq-q .pm::before,.faq-q .pm::after{content:""; position:absolute; background:var(--copper); transition:transform .3s ease;}
+.faq-q .pm::before{inset:7.5px 0 auto; height:1.5px;}
+.faq-q .pm::after{inset:0 7.5px; width:1.5px;}
+.faq-q[aria-expanded="true"] .pm::after{transform:scaleY(0);}
+.faq-a{display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s ease;}
+.faq-a > div{overflow:hidden;}
+.faq-item.open .faq-a{grid-template-rows:1fr;}
+.faq-a p{padding:0 4px 24px 45px; font-size:13.5px; line-height:2.1; color:var(--ink-mute);}
+
+/* ==========================================================
+   13 店舗情報・アクセス
+   ========================================================== */
+.access-grid{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start;}
+.info-tbl{width:100%; border-collapse:collapse; margin-top:32px;}
+.info-tbl th,.info-tbl td{text-align:left; padding:15px 0; border-bottom:1px solid var(--line); font-size:13.5px; vertical-align:top; line-height:1.9;}
+.info-tbl th{width:112px; font-weight:500; letter-spacing:.12em; color:var(--ink-mute); font-size:12px;}
+.map{aspect-ratio:4/3; border:1px solid var(--line); overflow:hidden; background:var(--cream-lo);}
+.map iframe{width:100%; height:100%; border:0; display:block;}
+.access-acts{display:flex; flex-wrap:wrap; gap:12px; margin-top:22px;}
+
+/* ==========================================================
+   14 締めの CTA
+   ========================================================== */
+.cta{position:relative; overflow:hidden; text-align:center;}
+.cta-media{position:absolute; inset:0; z-index:0;}
+.cta-media img{width:100%; height:100%; object-fit:cover; object-position:22% 52%; filter:brightness(1.02);}
+.cta-media::after{content:""; position:absolute; inset:0; background:linear-gradient(rgba(30,19,13,.50) 0%, rgba(30,19,13,.68) 24%, rgba(30,19,13,.87) 46%, rgba(30,19,13,.88) 78%, rgba(30,19,13,.72) 100%);}
+.cta .shell{position:relative; z-index:1; padding-top:88px; padding-bottom:88px;}
+.cta h2{font-size:clamp(24px,3.4vw,34px); color:#FFF7EC;}
+.cta p{margin-top:18px; font-size:13.5px; color:#E4D3BE; line-height:2.1;}
+.cta-acts{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:32px;}
+
+/* ==========================================================
+   フッター
+   ========================================================== */
+.ft{background:var(--espresso); color:var(--on-dark-mute); padding:56px 0 26px;}
+.ft-top{display:flex; flex-wrap:wrap; gap:36px; justify-content:space-between; padding-bottom:32px; border-bottom:1px solid var(--line-dark);}
+.ft .brand-tx small{color:var(--on-dark-mute);} .ft .brand-tx strong{color:#F5E9DA;}
+.ft-nav{display:flex; flex-wrap:wrap; gap:10px 30px;}
+.ft-nav a{font-size:12.5px; text-decoration:none; color:var(--on-dark-mute); letter-spacing:.08em;}
+.ft-nav a:hover{color:var(--copper-lt);}
+.ft-bt{display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:center; padding-top:22px; font-size:11px; letter-spacing:.1em;}
+.ft-sns{display:flex; gap:12px;}
+.ft-sns a{width:40px; height:40px; border:1px solid var(--line-dark); display:grid; place-items:center; border-radius:50%;}
+.ft-sns svg{width:17px; height:17px; stroke:var(--on-dark-mute); fill:none; stroke-width:1.3;}
+.ft-sns a:hover{border-color:var(--copper-lt);} .ft-sns a:hover svg{stroke:var(--copper-lt);}
+
+/* ==========================================================
+   スマホ固定バー（予約までのタップ数を最小にする）
+   ========================================================== */
+.bar{
+  display:none; position:fixed; left:0; right:0; bottom:0; z-index:70;
+  background:rgba(250,243,233,.97); border-top:1px solid var(--line);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  grid-template-columns:1fr 1.5fr 1fr; gap:8px;
+}
+.bar a{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  min-height:52px; text-decoration:none; font-size:11px; letter-spacing:.06em; border-radius:2px;
+}
+.bar .b-sub{border:1px solid var(--copper-deep); color:var(--copper-deep);}
+.bar .b-main{background:var(--copper); color:#FFF8F1; font-size:13px; font-weight:500; letter-spacing:.1em;}
+.bar svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.4;}
+
+/* ==========================================================
+   スクロール時のあらわれ
+   ========================================================== */
+.js .rise{opacity:0; transform:translateY(18px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.6,.2,1);}
+.js .rise.in{opacity:1; transform:none;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .js .rise{opacity:1; transform:none; transition:none;}
+}
+
+/* ==========================================================
+   レスポンシブ
+   ========================================================== */
+@media (max-width:1080px){
+  .quick-grid{grid-template-columns:repeat(3,1fr);}
+  .concern-grid{grid-template-columns:repeat(2,1fr);}
+  .voice-grid,.post-grid{grid-template-columns:repeat(2,1fr);}
+  .voice-grid > :nth-child(3),.post-grid > :nth-child(3){display:none;}
+}
+@media (max-width:900px){
+  :root{--gut:20px; --bar-h:70px;}
+  html{scroll-padding-top:70px;}
+  .gnav{display:none;}
+  .hd .btn{display:none;}
+  .burger{display:block;}
+  .hero{min-height:auto;}
+  .hero-in{padding:120px var(--gut) 40px;}
+  .hero-vert{display:none;}
+  .hero-grid{gap:0;}
+  .hero-body{padding-left:0;}
+  .hero-acts .btn{flex:1 1 100%;}
+  .quick{margin-top:-30px;}
+  .quick-grid{grid-template-columns:repeat(3,1fr);}
+  .quick-grid a{min-height:104px; padding:18px 6px;}
+  .sec{padding:64px 0;}
+  .about-grid,.msg-grid,.access-grid,.book-grid{grid-template-columns:1fr; gap:34px;}
+  .mosaic{grid-template-rows:repeat(2,140px);}
+  .biwa-media{inset:0;}
+  .biwa-media::after{background:linear-gradient(rgba(51,35,26,.84), rgba(51,35,26,.9));}
+  .biwa-pts{grid-template-columns:repeat(2,1fr); gap:24px 14px;}
+  .menu-grid{grid-template-columns:1fr;}
+  .mcard{grid-template-columns:104px 1fr;}
+  .mcard{min-height:150px;}
+  .mcard-bd{padding:16px;}
+  .mcard h3{font-size:15.5px;}
+  .mcard p{font-size:12px;}
+  .mcard-price{font-size:18px;}
+  .voice-grid,.post-grid{grid-template-columns:1fr;}
+  .voice-grid > :nth-child(3),.post-grid > :nth-child(3){display:flex;}
+  .reason-grid{grid-template-columns:1fr; gap:34px;}
+  .msg-ph{max-width:320px; margin-inline:auto;}
+  /* 署名は縦に積む。横並びだと屋号と氏名が両方折れる */
+  .msg-sign{flex-direction:column; align-items:flex-start; gap:7px; margin-top:22px;}
+  .msg-sign small{line-height:1.9;}
+  .msg-sign b{font-size:25px;}
+  .msg-ph figcaption{text-align:center;}
+  .bar{display:grid;}
+  .faq-a p{padding-left:4px;}
+}
+@media (max-width:420px){
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+  .cal{padding:16px 12px;}
+  .day{padding:6px 2px 7px;}
+  .day .d{font-size:13px;}
+}
+
+/* 仮の内容であることを示す小さな印（本番では削除する） */
+.prov{
+  display:inline-block; margin-left:7px; padding:1px 7px; border:1px solid var(--copper-lt);
+  color:var(--copper-deep); font-size:9.5px; letter-spacing:.14em; border-radius:2px;
+  vertical-align:2px; font-family:var(--sans);
+}
+.dark .prov{border-color:var(--copper-lt); color:var(--copper-lt);}
+.note{margin-top:22px; font-size:11.5px; line-height:1.9; color:var(--ink-mute);}
+
+/* スマホ用ドロワー */
+.drawer{
+  position:fixed; inset:0; z-index:65; background:var(--brown-dark);
+  display:flex; flex-direction:column; padding:78px 26px 30px; overflow-y:auto;
+}
+.drawer nav{display:flex; flex-direction:column;}
+.drawer nav a{
+  font-family:var(--serif); font-size:17px; letter-spacing:.12em; color:var(--on-dark);
+  text-decoration:none; padding:17px 0; border-bottom:1px solid var(--line-dark);
+}
+.drawer .d-acts{display:flex; flex-direction:column; gap:10px; margin-top:26px;}
+.drawer .d-close{position:absolute; top:18px; right:20px; width:44px; height:44px; background:none; border:0; color:var(--on-dark); font-size:22px; cursor:pointer;}
+.drawer[hidden]{display:none;}
+.btn[hidden]{display:none;}
+
+/* 素材が未支給の箇所。支給後に img へ差し替える */
+.ph-slot{
+  width:100%; aspect-ratio:3/4; border:1px dashed var(--line);
+  background:repeating-linear-gradient(135deg, rgba(216,198,176,.16) 0 1px, transparent 1px 11px), var(--cream);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  color:var(--ink-mute); text-align:center; letter-spacing:.1em; font-size:12.5px; line-height:1.9;
+}
+.ph-slot svg{width:44px; height:44px;}
+.ph-slot small{font-size:10.5px; opacity:.8;}
+@media (max-width:900px){ .ph-slot{aspect-ratio:4/3;} }
+
+/* ==========================================================
+   看板メニュー（フロント）— 初めての方に、まずこれ 1 つ
+   ========================================================== */
+.front{position:relative; overflow:hidden;}
+.front-media{position:absolute; inset:0 0 0 50%; z-index:0;}
+.front-media img{width:100%; height:100%; object-fit:cover; object-position:52% 42%;}
+.front-media::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, var(--espresso) 0%, rgba(36,24,17,.93) 24%, rgba(36,24,17,.46) 62%, rgba(36,24,17,.12) 100%);
+}
+.front .shell{position:relative; z-index:1;}
+.front-body{max-width:580px;}
+.front-tag{
+  display:inline-flex; align-items:center; gap:9px; border:1px solid var(--copper-lt);
+  color:var(--copper-lt); padding:7px 15px; font-size:11.5px; letter-spacing:.16em; border-radius:2px;
+}
+.front h2{font-size:clamp(26px,3.7vw,38px); margin-top:22px;}
+.front .lead{max-width:520px;}
+.front-price{
+  display:flex; align-items:baseline; flex-wrap:wrap; gap:8px 20px; margin-top:30px;
+  padding:20px 0; border-top:1px solid var(--line-dark); border-bottom:1px solid var(--line-dark);
+}
+.front-price .t{font-size:13px; letter-spacing:.16em; color:var(--on-dark-mute);}
+.front-price .y{font-family:var(--serif); font-size:clamp(34px,4.6vw,50px); color:#FFF3E4; line-height:1; letter-spacing:.02em;}
+.front-price .y small{font-size:17px; margin-left:5px; font-family:var(--sans); letter-spacing:.08em;}
+.front-price .tax{font-size:11.5px; color:var(--on-dark-mute); margin-left:auto;}
+.front-acts{display:flex; flex-wrap:wrap; gap:12px; margin-top:28px;}
+.front-more{margin-top:22px; font-size:12.5px; color:var(--on-dark-mute); line-height:2;}
+.front-more a{color:var(--copper-lt);}
+
+/* ==========================================================
+   メニュー・料金（2 層目）
+   ========================================================== */
+.price-wrap{display:grid; gap:20px; margin-top:44px;}
+.price-grp{background:var(--cream-hi); border:1px solid var(--line); padding:26px 28px 24px;}
+.price-grp > h3{display:flex; align-items:baseline; gap:14px; font-size:18px; padding-bottom:8px;}
+.price-grp > h3 em{font-style:normal; font-family:var(--sans); font-size:10.5px; letter-spacing:.18em; color:var(--ink-mute);}
+.price-row{
+  display:grid; grid-template-columns:1fr auto auto; gap:6px 22px; align-items:baseline;
+  padding:16px 0; border-top:1px solid var(--line);
+}
+.price-name{font-family:var(--serif); font-size:16px; letter-spacing:.06em;}
+.price-desc{grid-column:1 / -1; font-family:var(--sans); font-size:12px; color:var(--ink-mute); margin-top:4px; line-height:1.9; letter-spacing:.03em;}
+.price-time{font-size:12.5px; color:var(--ink-mute); letter-spacing:.1em; white-space:nowrap;}
+.price-yen{font-family:var(--serif); font-size:21px; color:var(--copper-deep); white-space:nowrap; letter-spacing:.02em;}
+.price-yen small{font-size:12px; font-family:var(--sans); letter-spacing:.06em;}
+.price-name .tag-new{
+  display:inline-block; margin-left:10px; background:var(--copper); color:#FFF8F1;
+  font-family:var(--sans); font-size:10px; letter-spacing:.12em; padding:3px 9px; border-radius:2px; vertical-align:3px;
+}
+
+/* 回数券（続けたい方へ） */
+.ticket{
+  margin-top:26px; border:1px solid var(--copper-deep); background:#FFF8F0;
+  display:grid; grid-template-columns:1.35fr 1fr; gap:0; overflow:hidden;
+}
+.ticket-bd{padding:32px 34px 30px;}
+.ticket-bd .eyebrow{margin-bottom:14px;}
+.ticket-bd h3{font-size:21px; line-height:1.65;}
+.ticket-bd p{margin-top:14px; font-size:13.5px; line-height:2.05; color:var(--ink-mute);}
+.ticket-list{margin-top:18px; display:grid; gap:9px;}
+.ticket-list li{display:grid; grid-template-columns:16px 1fr; gap:11px; font-size:12.5px; line-height:1.9; color:var(--ink);}
+.ticket-list li::before{content:""; width:6px; height:6px; margin-top:9px; border-radius:50%; background:var(--copper-deep);}
+.ticket-side{
+  background:var(--brown-dark); color:var(--on-dark); padding:32px 30px;
+  display:flex; flex-direction:column; justify-content:center; text-align:center;
+}
+.ticket-side b{display:block; font-family:var(--serif); font-size:15px; font-weight:500; color:#FFF3E4; letter-spacing:.1em;}
+.ticket-side .y{font-family:var(--serif); font-size:42px; color:#FFF3E4; line-height:1.1; margin-top:12px;}
+.ticket-side .y small{font-size:16px; font-family:var(--sans); margin-left:4px;}
+.ticket-side .u{margin-top:10px; font-size:11.5px; color:var(--on-dark-mute); line-height:1.9;}
+.ticket-side .btn{margin-top:20px;}
+.ticket-side .btn-ghost{color:var(--copper-lt); border-color:var(--copper-lt);}
+.ticket-side .btn-ghost:hover{background:var(--copper-lt); color:var(--espresso);}
+
+@media (max-width:900px){
+  .front-media{inset:0;}
+  .front-media::after{background:linear-gradient(rgba(36,24,17,.88), rgba(36,24,17,.93));}
+  .front-body{max-width:none;}
+  .front-acts .btn{flex:1 1 100%;}
+  .front-price .tax{margin-left:0; flex:1 1 100%;}
+  .price-grp{padding:22px 18px 20px;}
+  .price-row{grid-template-columns:1fr auto; gap:4px 14px;}
+  .price-time{grid-column:1; font-size:11.5px;}
+  .price-yen{grid-column:2; grid-row:1 / span 2; align-self:center;}
+  .ticket{grid-template-columns:1fr;}
+  .ticket-bd{padding:26px 20px 24px;}
+}
+
+/* ==========================================================
+   モバイル最適化
+   閲覧の大半がスマホ。指で触る前提でサイズと行の組み方を変える。
+   ========================================================== */
+@media (max-width:900px){
+  body{font-size:15.5px; line-height:1.95;}
+  .lead{font-size:15px; line-height:2.0;}
+  .note{font-size:12.5px; line-height:2.0;}
+
+  /* --- クイックナビ：2列。ラベルを大きく、指で押せる高さに --- */
+  .quick{margin-top:-26px;}
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+  .quick-grid a{min-height:98px; padding:20px 8px 18px; gap:9px;}
+  .quick-grid svg{width:24px; height:24px;}
+  .quick-grid span{font-size:13.5px;}
+  .quick-grid em{font-size:9.5px; margin-top:4px;}
+
+  /* --- お悩みカード：1列・横並び。2列だと文字が折れて読めない --- */
+  .concern-grid{grid-template-columns:1fr; gap:10px;}
+  .concern{
+    display:grid; grid-template-columns:44px 1fr auto; align-items:center;
+    gap:0 16px; padding:18px 16px;
+  }
+  .concern-ic{width:32px; height:32px; margin:0;}
+  .concern h3{grid-column:2; font-size:16px; line-height:1.6;}
+  .concern h3 br{display:none;}
+  .concern p{grid-column:2; margin-top:6px; font-size:13px; line-height:1.85;}
+  .concern .go{grid-column:2; margin-top:10px; font-size:12.5px;}
+
+  /* --- 看板メニュー：価格を大きく、ボタンは全幅 --- */
+  .front h2{font-size:23.5px; letter-spacing:.05em;}
+  .front-price{margin-top:24px; padding:18px 0;}
+  .front-price .y{font-size:44px;}
+  .front-price .t{width:100%; font-size:12.5px;}
+  .front-more{font-size:13px;}
+
+  /* --- 料金表：名前と金額を同じ行に、説明は下に全幅 --- */
+  .price-grp{padding:20px 16px 18px;}
+  .price-grp > h3{font-size:17px;}
+  .price-row{grid-template-columns:1fr auto; gap:2px 14px; padding:18px 0;}
+  .price-name{grid-column:1; grid-row:1; font-size:16.5px;}
+  .price-time{grid-column:1; grid-row:2; font-size:12.5px; margin-top:3px;}
+  .price-yen{grid-column:2; grid-row:1 / span 2; align-self:center; font-size:23px;}
+  .price-desc{grid-row:3; font-size:12.5px; margin-top:8px;}
+  .tag-new{display:inline-block; margin:6px 0 0 0; font-size:10.5px;}
+
+  /* --- 回数券 --- */
+  .ticket-side{padding:26px 20px 24px;}
+  .ticket-side .y{font-size:38px;}
+  .ticket-side .btn{width:100%;}
+  .ticket-list li{font-size:13px;}
+
+  /* --- 空き状況カレンダー：指で押せる大きさに --- */
+  .cal{padding:18px 14px;}
+  .cal-week{gap:5px;}
+  .day{min-height:52px; padding:7px 2px;}
+  .day .d{font-size:15px;}
+  .day .s{font-size:18px;}
+  .day .s.txt{font-size:10px;}
+  .cal-legend{gap:12px; font-size:12px;}
+  .cal-pick{flex-direction:column; align-items:stretch; gap:12px; text-align:center;}
+  .cal-pick .btn{width:100%;}
+  .step p{font-size:13px;}
+  .book-note{font-size:12.5px;}
+
+  /* --- 読み物 --- */
+  .voice p{font-size:13px;}
+  .voice h3{font-size:17px;}
+  .post h3{font-size:16px;}
+  .faq-q{font-size:16px; padding:20px 4px;}
+  .faq-a p{font-size:14px;}
+  .info-tbl th,.info-tbl td{font-size:14px; padding:14px 0;}
+  .info-tbl th{width:88px; font-size:12.5px;}
+  /* 表の中の電話リンクも指で押せる大きさにする */
+  .info-tbl a{display:inline-block; min-height:44px; line-height:44px; padding-right:8px;}
+  /* フッターのリンクも指のサイズに */
+  .ft-nav{gap:0 24px;}
+  .ft-nav a{display:inline-flex; align-items:center; min-height:44px;}
+  .ft-sns a{width:46px; height:46px;}
+  .msg-body p{font-size:14.5px;}
+  .reason p{font-size:14px;}
+
+  /* --- 固定バー：本日の空き状況を出す --- */
+  .bar{grid-template-columns:1fr 1.6fr 1fr; padding:9px 10px calc(9px + env(safe-area-inset-bottom));}
+  .bar a{min-height:56px;}
+  .bar .b-main{font-size:14px;}
+  .bar .b-lab{display:flex; align-items:center; gap:5px; font-size:11.5px; white-space:nowrap;}
+  .bar .b-lab b{font-size:15px; line-height:1;}
+}
+@media (max-width:420px){
+  .quick-grid a{min-height:92px; padding:16px 6px;}
+  .front-price .y{font-size:40px;}
+  .day{min-height:48px;}
+  .price-name{font-size:15.5px;}
+  .price-yen{font-size:21px;}
+}
