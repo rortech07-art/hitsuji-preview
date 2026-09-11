@@ -59,6 +59,22 @@
      空き状況カレンダー
      status: 'o' 空きあり / 't' 残りわずか / 'x' 満席 / 'off' 定休
      ========================================================== */
+  /* ミニアプリの管理画面で管理している空き状況があれば、それを使う（予約・休み・ふさいだ時間から自動で計算したもの）。
+     テスト版：同じ端末のアプリが保存した内容を読む（同じドメインに置いているので読める）。
+     本番：サーバーの /api/availability から同じ形で受け取る。受け取れないときは、下の仮のデータで表示する。 */
+  var FROM_APP = null;
+  try {
+    var saved = localStorage.getItem('hitsuji-demo-v1:web-availability');
+    if (saved) FROM_APP = JSON.parse(saved);
+  } catch (e) { FROM_APP = null; }
+  var NOTE = {};
+  if (FROM_APP && FROM_APP.days) {
+    window.HITSUJI_CAL = {};
+    FROM_APP.days.forEach(function (x) {
+      window.HITSUJI_CAL[x.date] = x.mark;
+      if (x.note) NOTE[x.date] = x.note;
+    });
+  }
   var CAL = window.HITSUJI_CAL || {};
   var LINE_URL = 'https://lin.ee/ex2fCM4';
   var DOW = ['日', '月', '火', '水', '木', '金', '土'];
@@ -97,12 +113,20 @@
       html += '<button type="button" class="day' + (dis ? (st === 'off' ? ' is-off' : ' is-x') : '') + '"' +
         (dis ? ' disabled' : '') +
         ' data-date="' + ymd(d) + '" data-dow="' + DOW[d.getDay()] + '"' +
-        ' aria-label="' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + m.label + '">' +
+        ' aria-label="' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + (NOTE[ymd(d)] || m.label) + '"' +
+        (NOTE[ymd(d)] ? ' title="' + NOTE[ymd(d)] + '"' : '') + '>' +
         '<span class="d">' + d.getDate() + '</span>' +
-        '<span class="s ' + m.cls + (st === 'off' ? ' txt' : '') + '">' + m.s + '</span>' +
+        '<span class="s ' + m.cls + (st === 'off' ? ' txt' : '') + '">' + (st === 'off' && NOTE[ymd(d)] ? '休' : m.s) + '</span>' +
         '</button>';
     }
     grid.innerHTML = html;
+
+    var upd = document.querySelector('.cal-upd');
+    if (upd && FROM_APP && FROM_APP.updatedAt) {
+      var u = new Date(FROM_APP.updatedAt);
+      upd.textContent = '最終更新：' + (u.getMonth() + 1) + '月' + u.getDate() + '日 ' +
+        String(u.getHours()).padStart(2, '0') + ':' + String(u.getMinutes()).padStart(2, '0') + '（予約と自動で連動）';
+    }
 
     var pickBox = document.getElementById('calPick');
     var pickTx = document.getElementById('calPickTx');
@@ -149,9 +173,10 @@
     var t1 = new Date(t0); t1.setDate(t0.getDate() + 1);
     [['本日', t0], ['明日', t1]].forEach(function (pair) {
       var m = MARK[statusOf(pair[1])];
+      var label = NOTE[ymd(pair[1])] || m.label;   /* 臨時休業のひとこと・受付終了を優先して出す */
       var body = (statusOf(pair[1]) === 'off')
-        ? m.label
-        : '<span class="mk ' + m.cls + '">' + m.s + '</span>' + m.label;
+        ? label
+        : '<span class="mk ' + m.cls + '">' + m.s + '</span>' + label;
       heroOpen.insertAdjacentHTML('beforeend', '<dt>' + pair[0] + '</dt><dd>' + body + '</dd>');
     });
   }
